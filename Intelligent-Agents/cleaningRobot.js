@@ -5,7 +5,8 @@ class World {
         this.location = 0;
         this.floors = [];
         for (let i = 0; i < numFloors; i++) {
-            this.floors.push({dirty: false});
+            this.floors.push({dirty: false
+            ,Vdirty: false});
         }
     }
 
@@ -13,10 +14,17 @@ class World {
         this.floors[floorNumber].dirty = true;
     }
 
+    markFloorVeryDirty(floorNumber) {
+        this.floors[floorNumber].Vdirty = true;
+    }
+
     simulate(action) {
         switch(action) {
         case 'SUCK':
             this.floors[this.location].dirty = false;
+            break;
+        case 'WASH':
+            this.floors[this.location].Vdirty = false;
             break;
         case 'A':
             this.location = 0;
@@ -39,11 +47,12 @@ class World {
 
 // Rules are defined in code
 function reflexVacuumAgent(world) {
-    if (world.floors[world.location].dirty) { return 'SUCK'; }
-    else if (world.location == 0)           { return 'A'; }
-    else if (world.location == 1)           { return 'B'; }
-    else if (world.location == 2)           { return 'C'; }
-    else if (world.location == 3)           { return 'D'; }
+    if (world.floors[world.location].Vdirty) { return 'WASH'; }
+    else if (world.floors[world.location].dirty) { return 'SUCK'; }
+    else if (world.location == 0)           { return 'B'; }
+    else if (world.location == 1)           { return 'C'; }
+    else if (world.location == 2)           { return 'D'; }
+    else if (world.location == 3)           { return 'A'; }
 }
 
 // Rules are defined in data, in a table indexed by [location][dirty]
